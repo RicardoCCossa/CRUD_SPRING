@@ -2,13 +2,18 @@ package com.ricardo.controller;
 
 import com.ricardo.Repository.CourseRepository;
 import com.ricardo.model.Courses;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/courses")
 @AllArgsConstructor
@@ -22,7 +27,7 @@ public class CoursesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Courses> findById(@PathVariable Long id) {
+    public ResponseEntity<Courses> findById(@PathVariable @NotNull @Positive Long id) {
         return courseRepository.findById(id)
        .map(recordFound -> ResponseEntity.ok().body(recordFound)).
         orElse(ResponseEntity.notFound().build());
@@ -30,12 +35,12 @@ public class CoursesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Courses create(@RequestBody Courses course) {
+    public Courses create(@RequestBody @Valid Courses course) {
         return courseRepository.save(course);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Courses> update(@PathVariable Long id, @RequestBody Courses course) {
+    public ResponseEntity<Courses> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Courses course) {
         return courseRepository.findById(id)
                 .map(recordFound -> {
                     recordFound.setName(course.getName());
@@ -47,7 +52,7 @@ public class CoursesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
         return courseRepository.findById(id)
                 .map(recordFound -> {
                     courseRepository.deleteById(id);

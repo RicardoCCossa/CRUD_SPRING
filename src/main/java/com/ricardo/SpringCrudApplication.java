@@ -20,7 +20,7 @@ public class SpringCrudApplication {
 			courseRepository.deleteAll();
 			Courses courses = new Courses();
 			courses.setName("Spring Crud");
-			courses.setCategory("Spring Framework");
+			courses.setCategory("Front-end");
 
 			courseRepository.save(courses);
 		};
